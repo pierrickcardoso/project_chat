@@ -6,7 +6,7 @@ requete_ajouter_message ="INSERT INTO 'text' (sender,receiver,contenue) VALUES (
 requete_lire_user = "SELECT * FROM 'user' "
 requete_lire_user_only = "SELECT username FROM 'user' "
 requete_lire_text = "SELECT * FROM 'text' "
-requete_lire_pm = "select * from text where receiver ="
+requete_lire_pm = "select * from text where (receiver ="
 app = Flask(__name__)
 bdd="BDD.db"
 Currentuser = None
@@ -78,9 +78,8 @@ def get_receiver():
     return redirect(url_for('private_msg'))
 @app.route("/private_msg")
 def private_msg():
-    requete_temp=requete_lire_pm+"'"+session['receiver']+"'"
-    print(requete_temp)
-    result=lire(bdd,requete_lire_text,multiples=True)
+    requete_temp=requete_lire_pm+"'"+session['receiver']+"' and sender="+"'"+session['username']+"')"+"or receiver='"+session["username"]+"' and sender='"+session['receiver']+"'"
+    result=lire(bdd,requete_temp,multiples=True)
     print(result)
     return render_template("private_msg.html",message=result ,var_deconnexion=url_for('logout'), var_chat_global=url_for('succes'))
 @app.route("/send_private_message", methods=['POST'])
@@ -89,4 +88,4 @@ def send_private_message():
     modifier(bdd,requete_ajouter_message,parametres=(session['username'],session['receiver'],text))
     return redirect(url_for('private_msg'))
 if __name__ == '__main__':
-    app.run(debug=True, port=8888)
+    app.run(debug=True,port=8888)
