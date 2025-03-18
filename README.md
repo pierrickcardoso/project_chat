@@ -3,16 +3,18 @@
 Lien sujet : https://github.com/NSI-T-2024/Tale_NSI_2024/tree/master/projets/chat
 
 A faire :
-[X] Se connecter
 
 
-[X] Ajouter des utilisateurs
+- [x] Se connecter
 
 
-[ ] Envoyer des message global 
+- [X] Ajouter des utilisateurs
 
 
-[ ] Charger des MP
+- [ ] Envoyer des message global 
 
 
-[ ] Envoyer des MP 
+- [ ] Charger des MP
+
+
+- [ ] Envoyer des MP 
