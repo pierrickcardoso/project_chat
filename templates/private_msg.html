@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Message prive</title>
+</head>
+<body>
+	<div id="message_area"> 
+		{% for ligne in message %}
+        <li>{{ ligne.0 }} : {{ ligne.2 }}</li>
+    {% endfor %}
+	</div>
+			<form action="/send_private_message" method="post">
+        <p>
+            <label for="text">Nouveau message</label>
+            <input type="text" id="text" name="text"/>
+        </p>
+            <input type="submit" value="Envoyer"/>
+        <button id="logout" type="button" onclick="window.location.href = '{{ var_deconnexion }}' ; " class="button">Se deconnecter</button>
+        <button id="logout" type="button" onclick="window.location.href = '{{ var_chat_global }}' ; " class="button">Retour au chat global</button>
+</body>
+</html>

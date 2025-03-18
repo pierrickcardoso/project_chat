@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Login</title>
+</head>
+<body>
+	<h1>Formulaire de connexion</h1>
+	    <form action="/verif_user" method="post">
+        <p>
+            <label for="nom">Votre nom d'utilisateur</label>
+            <input type="text" id="username" name="username"/>
+        </p>
+        <p>
+            <label for="prenom">Mot de passe :</label>
+            <input type="password" id="password" name="password"/>
+        </p>
+            <input type="submit" value="Se connecter"/>
+        </form>
+        <button id="retour" type="button" onclick="window.location.href = '{{ var_retour }}' ; " class="button">Retour</button>
+</body>
+</html>
