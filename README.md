@@ -1,5 +1,5 @@
 # project_chat
-
+Simule un chat web sur un serveur local propre a une machine 
 
 A faire :
 
