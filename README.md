@@ -11,10 +11,10 @@ A faire :
 - [X] Ajouter des utilisateurs
 
 
-- [ ] Envoyer des message global 
+- [X] Envoyer des message global 
 
 
-- [ ] Charger des MP
+- [X] Charger des MP
 
 
-- [ ] Envoyer des MP 
+- [X] Envoyer des MP 
