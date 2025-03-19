@@ -1,12 +1,14 @@
 from flask import Flask, render_template,request,redirect, url_for,session
 from outils_sql import *
 import bcrypt
+import logging
+logging.basicConfig(level=logging.DEBUG)
 requete_ajouter_user = "INSERT INTO 'user' (username,password) VALUES (?, ?);"
 requete_ajouter_message ="INSERT INTO 'text' (sender,receiver,contenue) VALUES (?, ?,?);"
 requete_lire_user = "SELECT * FROM 'user' "
 requete_lire_user_only = "SELECT username FROM 'user' "
 requete_lire_text = "SELECT * FROM 'text' "
-requete_lire_pm = "select * from text where (receiver ="
+
 app = Flask(__name__)
 bdd="BDD.db"
 Currentuser = None
@@ -70,22 +72,38 @@ def logout():
     return redirect(url_for('index'))
 @app.route("/get_receiver", methods=['POST'])
 def get_receiver():
-    sender=session['username']
-    receiver=request.form['text']
-    if receiver==sender or receiver==None:
-        redirect(url_for('succes'))
-    session['receiver']=receiver
+    sender = session.get('username', None)
+    receiver = request.form.get('text', None)
+    
+    logging.debug(f"get_receiver - sender: {sender}, receiver: {receiver}")
+    
+    if receiver is None or receiver == sender:
+        return redirect(url_for('succes'))
+    
+    session['receiver'] = receiver
+    logging.debug(f"Session mise à jour: {session}")
+    
     return redirect(url_for('private_msg'))
+
 @app.route("/private_msg")
 def private_msg():
-    requete_temp=requete_lire_pm+"'"+session['receiver']+"' and sender="+"'"+session['username']+"')"+"or receiver='"+session["username"]+"' and sender='"+session['receiver']+"'"
-    result=lire(bdd,requete_temp,multiples=True)
-    print(result)
-    return render_template("private_msg.html",message=result ,var_deconnexion=url_for('logout'), var_chat_global=url_for('succes'))
+    logging.debug(f"Accès à private_msg - Session: {session}")
+    
+    if 'receiver' not in session or session['receiver'] is None:
+        logging.debug("Problème: receiver non défini dans la session!")
+        return redirect(url_for('succes'))
+    
+    requete_temp = "SELECT * FROM text WHERE (receiver = ? AND sender = ?) OR (receiver = ? AND sender = ?)"
+    result = lire(bdd, requete_temp, parametres=(session['receiver'], session['username'], session['username'], session['receiver']), multiples=True)
+    
+    logging.debug(f"Requête SQL exécutée: {requete_temp} avec {session['receiver']} et {session['username']}")
+    logging.debug(f"Résultat de la requête: {result}")
+    
+    return render_template("private_msg.html", message=result, var_deconnexion=url_for('logout'), var_chat_global=url_for('succes'))
 @app.route("/send_private_message", methods=['POST'])
 def send_private_message():
     text=request.form['text']
     modifier(bdd,requete_ajouter_message,parametres=(session['username'],session['receiver'],text))
     return redirect(url_for('private_msg'))
 if __name__ == '__main__':
-    app.run(debug=True,port=8888)
+    app.run(debug=True, host='0.0.0.0', port=8888)
